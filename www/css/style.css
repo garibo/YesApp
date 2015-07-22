@@ -51,6 +51,11 @@ i.base.ion-android-exit
   font-size: 23px;
 }
 
+i.base.ion-android-send
+{
+  font-size: 23px;
+}
+
 body > ion-nav-view > ion-side-menus > ion-side-menu-content > ion-nav-bar > div:nth-child(3) > ion-header-bar
 {
   border-color: #343f4e;

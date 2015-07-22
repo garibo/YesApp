@@ -29,16 +29,12 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('tabController', function($scope) {
-    $scope.tab = 1;
+.controller('pedidosCtrl', function($scope) {
 
-    $scope.isSet = function(checkTab) {
-      return $scope.tab === checkTab;
-    };
+})
 
-    $scope.setTab = function(setTab) {
-      $scope.tab = setTab;
-    };
+.controller('canastaCtrl', function($scope) {
+
 })
 
 .controller('productosCtrl', function($scope, Pizzas, Platillos, Bebidas, $ionicLoading) {

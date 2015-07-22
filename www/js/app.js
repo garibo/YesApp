@@ -27,7 +27,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.factories'])
     views: {
       'menuContent': {
         templateUrl: "templates/pedidos.html",
-        controller: 'tabController'
+        controller: 'pedidosCtrl'
+      }
+    }
+  })
+
+  .state('app.canasta', {
+    url: "/canasta",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/canasta.html",
+        controller: 'canastaCtrl'
       }
     }
   })
