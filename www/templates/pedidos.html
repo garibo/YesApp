@@ -1,0 +1,83 @@
+<ion-view view-title="Pedidos">
+<div class="tabs tabs-icon-top tabs-striped tabs-top tabs-background-loght tabs-color-light tabs-positive">
+  <a class="tab-item"  ng-click="setTab(1)" ng-class="{ active:isSet(1) }">
+    <i class="icon ion-android-send"></i>
+    Pedidos
+  </a>
+  <a class="tab-item"  ng-click="setTab(2)" ng-class="{ active:isSet(2) }">
+    <i class="icon ion-android-cart"></i>
+    Canasta
+  </a>
+</div>
+  <ion-content>
+  <h1 style="margin-top:40px;"></h1>
+  <div ng-show="isSet(1)">
+    <!-- <h1>Pedidillos</h1> -->
+    <br>
+    <div class="card" >
+    <div class="item item-divider">
+      25 de mayo del 2015
+    </div>
+    <div class="item item-text-wrap">
+      <ul>
+        <li>Pizza mexicana - $150.00</li>
+        <li>Refresco - $12.00</li>
+        <li>Sopes - $25.00</li>
+        <li>Refresco - $15.00</li>
+      </ul>
+      <span><strong>Total:</strong> $202.00</span>
+    </div>
+  </div>
+
+  <br>
+    <div class="card" >
+    <div class="item item-divider">
+      18 de Junio del 2015
+    </div>
+    <div class="item item-text-wrap">
+      <ul>
+        <li>Pizza mexicana - $150.00</li>
+        <li>Refresco - $15.00</li>
+      </ul>
+      <span><strong>Total:</strong> $165.00</span>
+    </div>
+  </div>
+
+  <br>
+    <div class="card" >
+    <div class="item item-divider">
+      13 de Julio del 2015
+    </div>
+    <div class="item item-text-wrap">
+      <ul>
+        <li>Sopes - $25.00</li>
+        <li>Refresco - $15.00</li>
+      </ul>
+      <span><strong>Total:</strong> $40.00</span>
+    </div>
+  </div>
+  </div>
+
+  <div ng-show="isSet(2)">
+    <!-- <h1>Canastilla</h1> -->
+
+    <ul class="list">
+      <li class="item">
+          Pizza mexicana - $150.00
+      </li>
+      <li class="item">
+          Pizza mexicana - $150.00
+      </li>
+      <li class="item">
+          Pizza mexicana - $150.00
+      </li>
+      <li class="item">
+          Pizza mexicana - $150.00
+      </li>
+   </ul>
+   <button class="button button-assertive">
+    button-assertive
+  </button>
+  </div>
+  </ion-content>
+</ion-view>

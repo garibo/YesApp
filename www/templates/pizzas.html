@@ -1,0 +1,60 @@
+<ion-view view-title="Pizzas y mas">
+<ion-tabs class="tabs-striped tabs-top tabs-background-positive tabs-color-light">
+
+  <!-- Dashboard Tab -->
+  <ion-tab title="Pizzas">
+    <ion-nav-view name="pizzastab">
+    <ion-content>
+    
+    <div class="list">
+      <a class="item item-avatar" href="" ng-repeat="pizza in pizzas">
+      <img ng-src="img/productos/{{pizza.imagen_url}}">
+      <button class="button  button-balanced icon ion-plus-round" style="float:right" ng-click="hola()"></button>
+      <h2>{{pizza.nombre}}</h2>
+      <p>{{pizza.ingredientes}}</p>
+      </a>
+    </div>
+
+    </ion-content>
+   </ion-nav-view>
+  </ion-tab>
+
+  <!-- Chats Tab -->
+  <ion-tab title="Platillos" >
+    <ion-nav-view name="otrostab">
+    <ion-content>
+      
+      <div class="list">
+      <a class="item item-avatar" href="" ng-repeat="platillo in platillos">
+      <img ng-src="img/productos/{{platillo.imagen_url}}">
+      <button class="button  button-balanced icon ion-plus-round" style="float:right" ng-click="hola()"></button>
+      <h2>{{platillo.nombre}}</h2>
+      <p>{{platillo.ingredientes}}</p>
+      <p>{{platillo.precio | currency}}</p>
+      </a>
+    </div>
+
+    </ion-content>
+    </ion-nav-view>
+  </ion-tab>
+
+  <!-- Account Tab -->
+  <ion-tab title="Bebidas">
+    <ion-nav-view name="bebidastab">
+    <ion-content>
+      
+      <div class="list">
+      <a class="item item-avatar" href="" ng-repeat="bebida in bebidas">
+      <img ng-src="img/productos/{{bebida.imagen_url}}">
+      <button class="button  button-balanced icon ion-plus-round" style="float:right" ng-click="hola()"></button>
+      <h2>{{bebida.nombre}}</h2>
+      <p>{{bebida.precio | currency}}</p>
+      </a>
+    </div>
+
+    </ion-content>
+    </ion-nav-view>
+  </ion-tab>
+
+</ion-tabs>  
+</ion-view>
