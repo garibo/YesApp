@@ -37,7 +37,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('productosCtrl', function($scope, Pizzas, Platillos, Bebidas, $ionicLoading) {
+.controller('productosCtrl', function($scope, Pizzas, Platillos, Bebidas, $ionicLoading, $ionicPopup, $filter) {
   $scope.pizzas = Pizzas.query(function(){
     
    $ionicLoading.hide();
@@ -55,5 +55,64 @@ angular.module('starter.controllers', [])
     showDelay: 0
   });
 
+   $scope.agregarPlatillo = function(platillo)
+   {
+       var confirmPopup = $ionicPopup.confirm({
+         title: 'Deseas ordenar este platillo?',
+         template: '<p>'+platillo.nombre+'</p><p><strong>'+$filter('currency')(platillo.precio)+'</strong></p>'
+       });
+       confirmPopup.then(function(res) {
+         if(res) {
+           console.log('You are sure');
+         } else {
+           console.log('You are not sure');
+         }
+       });
+   }
+
+   $scope.agregarBebida = function(bebida)
+   {
+    var confirmPopup = $ionicPopup.confirm({
+         title: 'Deseas ordenar esta bebida?',
+         template: '<p>'+bebida.nombre+'</p><p><strong>'+$filter('currency')(bebida.precio)+'</strong></p>'
+       });
+       confirmPopup.then(function(res) {
+         if(res) {
+           console.log('You are sure');
+         } else {
+           console.log('You are not sure');
+         }
+       });
+   }
+
+   $scope.agregarPizza = function(pizza) {
+  $scope.data = {}
+
+  // An elaborate, custom popup
+  var myPopup = $ionicPopup.show({
+    templateUrl : 'templates/precios.html',
+    title: 'Escoja el tamaño de su Pizza',
+    subTitle: ''+pizza.nombre,
+    scope: $scope,
+    buttons: [
+      { text: 'Cancel' },
+      {
+        text: '<b>Save</b>',
+        type: 'button-positive',
+        onTap: function(e) {
+          if (!$scope.data.wifi) {
+            //don't allow the user to close unless he enters wifi password
+            e.preventDefault();
+          } else {
+            return $scope.data.wifi;
+          }
+        }
+      }
+    ]
+  });
+  myPopup.then(function(res) {
+    console.log('Tapped!', res);
+  });
+ }
 
 });
