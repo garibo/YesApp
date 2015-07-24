@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', [, 'ngCordova', 'ui.router'])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout) {
   
@@ -29,15 +29,33 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('pedidosCtrl', function($scope) {
+.controller('pedidosCtrl', function($scope, $state) {
 
 })
 
-.controller('canastaCtrl', function($scope) {
+.controller('canastaCtrl', function($scope, $cordovaSQLite, $state) {
+  $state.go($state.current, {}, {reload: true});
 
+  $scope.productos = [];
+  db = $cordovaSQLite.openDB("yesApp.db");
+  var query = "SELECT * FROM canasta";
+  $cordovaSQLite.execute(db, query, [])
+  .then(function(res){
+  if(res.rows.length > 0) {
+      for (var i = 0; i < res.rows.length; i++) {
+          $scope.productos.push(res.rows.item(i));
+      };
+  } else {
+      alert("No results found");
+  }
+  }, function (err) {
+      alert(err);
+  }); 
+
+       
 })
 
-.controller('productosCtrl', function($scope, Pizzas, Platillos, Bebidas, $ionicLoading, $ionicPopup, $filter) {
+.controller('productosCtrl', function($scope, Pizzas, Platillos, Bebidas, $ionicLoading, $ionicPopup, $filter, $cordovaSQLite, $state, $stateParams) {
   $scope.pizzas = Pizzas.query(function(){
     
    $ionicLoading.hide();
@@ -63,7 +81,7 @@ angular.module('starter.controllers', [])
        });
        confirmPopup.then(function(res) {
          if(res) {
-           console.log('You are sure');
+           insertar(platillo.id, platillo.nombre, platillo.precio, platillo.ingredientes, platillo.imagen_url);
          } else {
            console.log('You are not sure');
          }
@@ -78,7 +96,7 @@ angular.module('starter.controllers', [])
        });
        confirmPopup.then(function(res) {
          if(res) {
-           console.log('You are sure');
+           insertar(bebida.id, bebida.nombre, bebida.precio, bebida.ingredientes, bebida.imagen_url);
          } else {
            console.log('You are not sure');
          }
@@ -114,5 +132,20 @@ angular.module('starter.controllers', [])
     console.log('Tapped!', res);
   });
  }
+
+  function insertar(id, nombre, precio, ingredientes, imagen) {
+    var db = $cordovaSQLite.openDB("yesApp.db");
+    var query = 'INSERT INTO canasta  (id_producto, nombre, precio, ingredientes, imagen_url) VALUES (?, ?, ?, ?, ?)';
+    $cordovaSQLite.execute(db, query, [id, nombre, precio, ingredientes, imagen]).then(function(res) {
+        // alert("Ha sido insertado ");
+        $state.transitionTo("app.canasta", $stateParams, {
+            reload: true,
+            inherit: false,
+            notify: true
+        });
+       }, function (err) {
+        alert(JSON.stringify(err));
+    });
+  }
 
 });
