@@ -36,19 +36,22 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 .controller('canastaCtrl', function($scope, $cordovaSQLite, $ionicPopup) {
 
   $scope.productos = [];
+  $scope.total = 0;
 
   $scope.$on('$ionicView.leave', function(){
   $scope.productos = [];
+  $scope.total = 0;
   });
 
   $scope.$on('$ionicView.enter', function(){
     var db = $cordovaSQLite.openDB("yesApp.db");
-    var query = "SELECT * FROM canasta";
+    var query = "SELECT * FROM canasta ORDER BY id DESC";
     $cordovaSQLite.execute(db, query, [])
     .then(function(res){
     if(res.rows.length > 0) {
         for (var i = 0; i < res.rows.length; i++) {
             $scope.productos.push(res.rows.item(i));
+            $scope.total += res.rows.item(i).precio;
         };
     } else {
         alert("No results found");
@@ -77,6 +80,7 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
               if($scope.productos[i].id == producto.id)
               {
                 $scope.productos.splice(i,1);
+                 $scope.total -= producto.precio;
                 break;
               }
             }

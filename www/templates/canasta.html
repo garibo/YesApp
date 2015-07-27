@@ -1,7 +1,7 @@
 <ion-view view-title="Canasta">
   <ion-content>
    
-   <div class="list">
+   <div class="list"  id="productosCanasta">
       <a class="item item-avatar" href="" ng-repeat="producto in productos" >
       <img ng-src="img/productos/{{producto.imagen_url}}">
       <button class="button  button-assertive icon ion-minus-circled" ng-click="eliminar(producto)" style="float:right"></button>
@@ -11,6 +11,9 @@
       </a>
     </div>
 
-
   </ion-content>
+    <button class="button button-outline button-assertive button-full" id="pedido" style="position:fixed; bottom:-10px; background: white;">
+      <i class="icon ion-paper-airplane"></i>
+      Enviar pedido -  {{ total | currency}}
+    </button>
 </ion-view>

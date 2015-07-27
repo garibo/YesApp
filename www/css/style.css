@@ -71,3 +71,13 @@ body > ion-nav-view > ion-side-menus > ion-side-menu-content > ion-nav-bar > div
 {
   background-color: #343f4e;
 }
+
+button.activated#pedido
+{
+  background-color: rgb(239, 71, 58) !important;
+}
+
+#roductosCanasta
+{
+  margin-bottom:33px !important;
+}
