@@ -12,7 +12,7 @@
     </div>
 
   </ion-content>
-    <button class="button button-outline button-assertive button-full" id="pedido" style="position:fixed; bottom:-10px; background: white;">
+    <button class="button button-outline button-assertive button-full" id="pedido" style="position:fixed; bottom:-10px; background: white;" ng-click="login()" ng-show="total">
       <i class="icon ion-paper-airplane"></i>
       Enviar pedido -  {{ total | currency}}
     </button>
