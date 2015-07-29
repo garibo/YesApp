@@ -2,38 +2,13 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout) {
   
-  
-  $scope.loginData = {};
-
-  $ionicModal.fromTemplateUrl('templates/login.html', {
-    scope: $scope
-  }).then(function(modal) {
-    $scope.modal = modal;
-  });
-
-  $scope.closeLogin = function() {
-    $scope.modal.hide();
-  };
-
-  $scope.login = function() {
-    $scope.modal.show();
-  };
-
-  $scope.doLogin = function() {
-    console.log('Doing login', $scope.loginData);
-
-    $timeout(function() {
-      $scope.closeLogin();
-    }, 1000);
-  };
-
 })
 
 .controller('pedidosCtrl', function($scope, $state) {
 
 })
 
-.controller('canastaCtrl', function($scope, $cordovaSQLite, $ionicPopup, $ionicModal) {
+.controller('canastaCtrl', function($scope, $cordovaSQLite, $ionicPopup, $ionicModal, $cordovaGeolocation) {
 
   $scope.productos = [];
   $scope.total = 0;
@@ -93,9 +68,9 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
      });
   }
 
-  $scope.loginData = {};
+  $scope.pedirData = {};
 
-  $ionicModal.fromTemplateUrl('templates/login.html', {
+  $ionicModal.fromTemplateUrl('templates/direccion.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.modal = modal;
@@ -110,11 +85,17 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
   };
 
   $scope.doLogin = function() {
-    console.log('Doing login', $scope.loginData);
+      
 
-    $timeout(function() {
-      $scope.closeLogin();
-    }, 1000);
+      var posOptions = {timeout: 10000, enableHighAccuracy: false};
+      $cordovaGeolocation
+      .getCurrentPosition(posOptions)
+      .then(function (position) {
+        
+      }, function(err) {
+        alert("Valio verga");
+      });
+
   };
        
 })

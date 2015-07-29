@@ -6,29 +6,29 @@
     </div>
   </ion-header-bar>
   <ion-content>
-    <form ng-submit="doLogin()">
+    <form ng-submit="doLogin()" name="canastaPedidos">
       <div class="list">
         <div class="list">
           <label class="item item-input">
-            <input type="text" placeholder="Calle">
+            <input type="text" placeholder="Calle" ng-model="pedirData.calle" required>
           </label>
           <label class="item item-input">
-            <input type="text" placeholder="Colonia">
+            <input type="text" placeholder="Colonia" ng-model="pedirData.colonia" required>
           </label>
           <label class="item item-input">
-            <input type="text" placeholder="Numero">
+            <input type="text" placeholder="Numero" ng-model="pedirData.numero" required>
           </label>
           <label class="item item-input">
-            <input type="text" placeholder="Informacion extra">
+            <input type="text" placeholder="Informacion extra" ng-model="pedirData.informacion">
           </label>
           <label class="item item-input">
-            <textarea placeholder="Entre calle y calle"></textarea>
+            <textarea placeholder="Entre calle y calle" ng-model="pedirData.entre"></textarea>
           </label>
           <label class="item item-input">
-            <input type="number" placeholder="Telefono">
+            <input type="number" placeholder="Telefono" ng-model="pedirData.telefono" required>
           </label>
         <label class="item">
-          <button class="button button-block button-balanced" type="submit">
+          <button class="button button-block button-balanced" type="submit" ng-disabled="canastaPedidos.$invalid">
           <i class="icon ion-paper-airplane"></i>
           Enviar
         </button>
