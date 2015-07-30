@@ -91,6 +91,8 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
       $cordovaGeolocation
       .getCurrentPosition(posOptions)
       .then(function (position) {
+
+        Pedidos.nuevoPedido("Ignacio zaragoza", "fundo legal");
         
       }, function(err) {
         alert("Valio verga");
