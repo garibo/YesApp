@@ -8,7 +8,7 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 
 })
 
-.controller('canastaCtrl', function($scope, $cordovaSQLite, $ionicPopup, $ionicModal, $cordovaGeolocation) {
+.controller('canastaCtrl', function($scope, $cordovaSQLite, $ionicPopup, $ionicModal, $cordovaGeolocation, Pedidos) {
 
   $scope.productos = [];
   $scope.total = 0;
@@ -92,7 +92,7 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
       .getCurrentPosition(posOptions)
       .then(function (position) {
 
-        Pedidos.nuevoPedido("Ignacio zaragoza", "fundo legal");
+        Pedidos.nuevoPedido($scope.productos, position.coords.latitude, position.coords.longitude);
         
       }, function(err) {
         alert("Valio verga");

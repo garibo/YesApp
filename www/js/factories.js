@@ -26,28 +26,33 @@ angular.module('starter.factories', ['ngResource'])
 
 .factory('Pedidos', function ($http, $q) {
     return {
-        nuevoPedido: function(Dcalle, Dcolonia) {
+        nuevoPedido: function(productosE, latitudE, longitudE) {
             return $http({
 					method: "POST",
 					url: "http://pizzeriayes.com/administrador/app/pedidos/php/dist/api/",
 					data: {
-				        calle: Dcalle,
-				        colonia: Dcolonia
-				    },
-					headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-				})
-                .then(function(response) {
-                    if (typeof response.data === 'object') {
-                        return response.data;
-                    } else {
-                        // invalid response
-                        return $q.reject(response.data);
-                    }
+						"id_cliente" : 1,
+						"id_direccion" : 1,
+						"id_telefono" : 1,
+						"latitud" : latitudE,
+						"longitud" : longitudE,
+						"productos" : productosE
 
-                }, function(response) {
-                    // something went wrong
-                    return $q.reject(response.data);
-                });
+					},
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+					})
+					.then(function(response) {
+		                if (typeof response.data === 'object') {
+		                    return response.data;
+		                } else {
+		                    // invalid response
+		                    return $q.reject(response.data);
+		                }
+
+		            }, function(response) {
+		                // something went wrong
+		                return $q.reject(response.data);
+		            });
         }
     };
 });
