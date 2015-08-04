@@ -10,7 +10,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.factories', 
       StatusBar.styleDefault();
     }
     var db = $cordovaSQLite.openDB("yesApp.db");
-    $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS canasta ( id integer primary key autoincrement, id_producto integer, nombre varchar(35), precio numeric(15,2), ingredientes varchar(140), imagen_url varchar(200));");
+    $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS canasta ( id integer primary key autoincrement, id_producto integer, nombre varchar(35), precio numeric(15,2), ingredientes varchar(140), tamano integer, imagen_url varchar(200));");
   });
 })
 

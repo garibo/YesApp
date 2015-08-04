@@ -26,34 +26,44 @@
 	border-color: #fff;
 }
 
+i.base
+{
+  color: #7c7c7c;
+}
+
+span.teisto
+{
+  color: black;
+}
+
 i.base.ion-android-home 
 {
-  font-size: 23px;
+  font-size: 28px;
 }
 
 i.base.ion-android-cart
 {
-  font-size: 23px;
+  font-size: 28px;
 }
 
 i.base.ion-pizza 
 {
-  font-size: 23px;
+  font-size: 28px;
 }
 
 i.base.ion-wrench
 {
-  font-size: 23px;
+  font-size: 28px;
 }
 
 i.base.ion-android-exit 
 {
-  font-size: 23px;
+  font-size: 28px;
 }
 
 i.base.ion-android-send
 {
-  font-size: 23px;
+  font-size: 28px;
 }
 
 body > ion-nav-view > ion-side-menus > ion-side-menu-content > ion-nav-bar > div:nth-child(3) > ion-header-bar

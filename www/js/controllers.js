@@ -143,7 +143,7 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
        });
        confirmPopup.then(function(res) {
          if(res) {
-           insertar(platillo.id, platillo.nombre, platillo.precio, platillo.ingredientes, platillo.imagen_url);
+           insertar(platillo.id, platillo.nombre, platillo.precio, platillo.ingredientes, null, platillo.imagen_url);
          } else {
            console.log('You are not sure');
          }
@@ -160,7 +160,7 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
        });
        confirmPopup.then(function(res) {
          if(res) {
-           insertar(bebida.id, bebida.nombre, bebida.precio, bebida.ingredientes, bebida.imagen_url);
+           insertar(bebida.id, bebida.nombre, bebida.precio, bebida.ingredientes, null, bebida.imagen_url);
          } else {
            console.log('You are not sure');
          }
@@ -194,17 +194,26 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
   });
   myPopup.then(function(res) {
     if(res) {
-      insertar(pizza.id, pizza.nombre, res, pizza.ingredientes, pizza.imagen_url);
+      for(var i = 0; i < $scope.precios.length; i++)
+      {
+        if($scope.precios[i].precio == res)
+        {
+          insertar(pizza.id, pizza.nombre, res, pizza.ingredientes, $scope.precios[i].id, pizza.imagen_url);
+          break;
+        } 
+
+      }
+      
      } else {
        console.log('You are not sure');
      }
   });
  }
 
-  function insertar(id, nombre, precio, ingredientes, imagen) {
+  function insertar(id, nombre, precio, ingredientes, tamano, imagen) {
     var db = $cordovaSQLite.openDB("yesApp.db");
-    var query = 'INSERT INTO canasta  (id_producto, nombre, precio, ingredientes, imagen_url) VALUES (?, ?, ?, ?, ?)';
-    $cordovaSQLite.execute(db, query, [id, nombre, precio, ingredientes, imagen]).then(function(res) {
+    var query = 'INSERT INTO canasta  (id_producto, nombre, precio, ingredientes, tamano, imagen_url) VALUES (?, ?, ?, ?, ?, ?)';
+    $cordovaSQLite.execute(db, query, [id, nombre, precio, ingredientes, tamano, imagen]).then(function(res) {
        $state.go('app.canasta');
        }, function (err) {
         alert(JSON.stringify(err));
