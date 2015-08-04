@@ -24,6 +24,14 @@ angular.module('starter.factories', ['ngResource'])
 	});
 })
 
+.factory('Precios',function($resource){
+	return $resource('http://pizzeriayes.com/administrador/app/ajustes/php/precios/api/',{
+		id : '@id'
+		},{
+		'update': { method:'PUT' }
+	});
+})
+
 .factory('Pedidos', function ($http, $q) {
     return {
         nuevoPedido: function(productosE, latitudE, longitudE) {

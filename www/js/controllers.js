@@ -8,7 +8,7 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 
 })
 
-.controller('canastaCtrl', function($scope, $cordovaSQLite, $ionicPopup, $ionicModal, $cordovaGeolocation, Pedidos) {
+.controller('canastaCtrl', function($scope, $cordovaSQLite, $ionicPopup, $ionicModal, $cordovaGeolocation, Pedidos, $ionicLoading) {
 
   $scope.productos = [];
   $scope.total = 0;
@@ -86,13 +86,26 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 
   $scope.doLogin = function() {
       
-
+      $ionicLoading.show({
+        content: 'Loading',
+        animation: 'fade-in',
+        showBackdrop: true,
+        maxWidth: 200,
+        showDelay: 0
+      });
       var posOptions = {timeout: 10000, enableHighAccuracy: false};
       $cordovaGeolocation
       .getCurrentPosition(posOptions)
       .then(function (position) {
 
-        Pedidos.nuevoPedido($scope.productos, position.coords.latitude, position.coords.longitude);
+        Pedidos.nuevoPedido($scope.productos, position.coords.latitude, position.coords.longitude)
+        .then(function(data) {
+        if (data.respuesta === 'bien') {
+           $ionicLoading.hide();
+         } else {
+        }
+        }, function(error) {
+        });
         
       }, function(err) {
         alert("Valio verga");
@@ -102,10 +115,10 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
        
 })
 
-.controller('productosCtrl', function($scope, Pizzas, Platillos, Bebidas, $ionicLoading, $ionicPopup, $filter, $cordovaSQLite, $state) {
+.controller('productosCtrl', function($scope, Pizzas, Platillos, Bebidas, $ionicLoading, $ionicPopup, $filter, $cordovaSQLite, $state, Precios) {
   $scope.pizzas = Pizzas.query(function(){
-    
    $ionicLoading.hide();
+    $scope.precios = Precios.query();
   },function(){
 
   });
