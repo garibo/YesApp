@@ -63,4 +63,16 @@ angular.module('starter.factories', ['ngResource'])
 		            });
         }
     };
+})
+
+
+.factory('ListaPedidos', function($http){
+return {
+  datos: function (id, callback){
+    $http({
+      method: 'GET',
+      url: 'http://pizzeriayes.com/administrador/app/pedidos/php/record/pedidos.php/'+id+''
+    }).success(callback);
+  }
+};
 });

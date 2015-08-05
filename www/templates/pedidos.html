@@ -1,47 +1,19 @@
 <ion-view view-title="Pedidos">
   <ion-content>
-    <div class="card" >
-<div class="item item-divider">
-  25 de mayo del 2015
-</div>
-<div class="item item-text-wrap">
-  <ul>
-    <li>Pizza mexicana - $150.00</li>
-    <li>Refresco - $12.00</li>
-    <li>Sopes - $25.00</li>
-    <li>Refresco - $15.00</li>
-  </ul>
-  <span><strong>Total:</strong> $202.00</span>
-</div>
-</div>
 
+    <div class="card" ng-repeat="pedido in pedidos">
+    <div class="item item-divider">
+      <p>{{pedido.fecha}} {{pedido.hora}}</p>
+    </div>
+    <div class="item item-text-wrap">
+      <ul>
+        <li ng-repeat="producto in pedido.productos">
+          {{producto.nombre}} {{((producto.precio_pizza == null) && producto.precio || !(producto.precio_pizza == null) && producto.precio_pizza) | currency}}
+        </li>
+      </ul>
+      <span><strong>Total:</strong> $202.00</span>
+    </div>
+    </div>
 
-<div class="card" >
-<div class="item item-divider">
-  18 de Junio del 2015
-</div>
-<div class="item item-text-wrap">
-  <ul>
-    <li>Pizza mexicana - $150.00</li>
-    <li>Refresco - $15.00</li>
-  </ul>
-  <span><strong>Total:</strong> $165.00</span>
-</div>
-</div>
-
-
-<div class="card" >
-<div class="item item-divider">
-  13 de Julio del 2015
-</div>
-<div class="item item-text-wrap">
-  <ul>
-    <li>Sopes - $25.00</li>
-    <li>Refresco - $15.00</li>
-  </ul>
-  <span><strong>Total:</strong> $40.00</span>
-</div>
-</div>
-</div>
   </ion-content>
 </ion-view>

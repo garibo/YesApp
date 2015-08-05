@@ -4,7 +4,19 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
   
 })
 
-.controller('pedidosCtrl', function($scope, $state) {
+.controller('pedidosCtrl', function($scope, $ionicLoading, ListaPedidos) {
+    $ionicLoading.show({
+      content: 'Loading',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
+    });
+
+    ListaPedidos.datos(1, function(data) {
+      $scope.pedidos = data;
+      $ionicLoading.hide();
+    });
 
 })
 
