@@ -241,10 +241,21 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 })
 
 .controller('ajustesCtrl', function($scope, $cordovaOauth, $localstorage, $location, $http) {
-  $scope.cosqui = $localstorage.get('name');
+   $scope.nombre = $localstorage.get('nombre');
+   $scope.email = $localstorage.get('email');
+   $scope.sexo = $localstorage.get('sexo');
+   $scope.foto = $localstorage.get('foto');
+
+   
+   $scope.correof = $localstorage.get('correof');
+   $scope.nombref = $localstorage.get('nombref');
+   $scope.sexof = $localstorage.get('sexof');
+   $scope.fotof = $localstorage.get('fotof');
+  
+  
+   
   $scope.googleLogin = function()
   {
-    $localstorage.set('name', 'Max');
     $cordovaOauth.google("956498525722-bd18h7c72rpqutl22d6oqug36j3cq4ue.apps.googleusercontent.com", ["https://www.googleapis.com/auth/urlshortener", "https://www.googleapis.com/auth/userinfo.email"]).then(function(result) {
         alert(JSON.stringify(result));
         $scope.getDataProfile(result.access_token);
@@ -285,6 +296,11 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
            $scope.email = data.email;
            $scope.sexo = data.gender;
            $scope.foto = data.picture;
+
+           $localstorage.set('nombre', data.name);
+           $localstorage.set('email', data.email);
+           $localstorage.set('sexo', data.gender);
+           $localstorage.set('foto', data.picture);
            }
         });
         //$scope.disconnectUser(); //This call can be done later.
@@ -306,11 +322,14 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
   {
     $http.get("https://graph.facebook.com/v2.2/me", { params: { access_token: accessToken, fields: "id,name,gender,location,website,picture,relationship_status, email", format: "json" }}).then(function(result) {
         alert(JSON.stringify(result.data));
-          $scope.correof = result.data.email;
-         $scope.nombref = result.data.name;
-         $scope.sexof = result.data.gender;
-         $scope.fotof = result.data.picture.data.url;
-        $scope.profileData = result.data;
+           $scope.correof = result.data.email;
+           $scope.nombref = result.data.name;
+           $scope.sexof = result.data.gender;
+           $scope.fotof = result.data.picture.data.url;
+          $localstorage.set('nombref', result.data.name);
+          $localstorage.set('correof', result.data.email);
+          $localstorage.set('sexof', result.data.gender);
+          $localstorage.set('fotof', result.data.picture.data.url);
     }, function(error) {
         alert("There was a problem getting your profile.  Check the logs for details.");
         console.log(error);
