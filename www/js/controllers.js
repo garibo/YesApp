@@ -18,6 +18,12 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
       $ionicLoading.hide();
     });
 
+    $scope.fecha = function(dia)
+    {
+      moment.locale('es');
+      return moment(dia).format('MMMM Do YYYY');
+    }
+
 })
 
 .controller('canastaCtrl', function($scope, $cordovaSQLite, $ionicPopup, $ionicModal, $cordovaGeolocation, Pedidos, $ionicLoading) {
@@ -232,4 +238,82 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
     });
   }
 
+})
+
+.controller('ajustesCtrl', function($scope, $cordovaOauth, $localstorage, $location, $http) {
+  $scope.cosqui = $localstorage.get('name');
+  $scope.googleLogin = function()
+  {
+    $localstorage.set('name', 'Max');
+    $cordovaOauth.google("956498525722-bd18h7c72rpqutl22d6oqug36j3cq4ue.apps.googleusercontent.com", ["https://www.googleapis.com/auth/urlshortener", "https://www.googleapis.com/auth/userinfo.email"]).then(function(result) {
+        alert(JSON.stringify(result));
+        $scope.getDataProfile(result.access_token);
+    }, function(error) {
+        alert("8==D"+error);
+    });
+  }
+
+  $scope.getDataProfile = function(accessToken){
+    var term=null;
+    //  alert("getting user data="+accessToken);
+    $.ajax({
+           url:'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token='+accessToken,
+           type:'GET',
+           data:term,
+           dataType:'json',
+           error:function(jqXHR,text_status,strError){
+           },
+           success:function(data)
+           {
+           var item;
+
+           console.log(JSON.stringify(data));
+           alert(JSON.stringify(data));
+           // Save the userprofile data in your localStorage.
+           // window.localStorage.gmailLogin="true";
+           // window.localStorage.gmailID=data.id;
+           // window.localStorage.gmailEmail=data.email;
+           // window.localStorage.gmailFirstName=data.given_name;
+           // window.localStorage.gmailLastName=data.family_name;
+           // window.localStorage.gmailProfilePicture=data.picture;
+           // window.localStorage.gmailGender=data.gender;
+           // window.localStorage.gmailName=data.name;
+           // $scope.email = data.email;
+           // $scope.name = data.name;
+
+           $scope.nombre = data.name;
+           $scope.email = data.email;
+           $scope.sexo = data.gender;
+           $scope.foto = data.picture;
+           }
+        });
+        //$scope.disconnectUser(); //This call can be done later.
+  };
+
+  $scope.facebookLogin = function() {
+    $cordovaOauth.facebook("709455109197894", ["email", "public_profile", "user_friends"]).then(function(result) {
+          $scope.accessToken = result.access_token;
+          $scope.jalala($scope.accessToken);
+      }, function(error) {
+          alert("There was a problem signing in!  See the console for logs");
+          alert(JSON.stringify(error));
+      });
+
+  };
+
+
+  $scope.jalala = function(accessToken)
+  {
+    $http.get("https://graph.facebook.com/v2.2/me", { params: { access_token: accessToken, fields: "id,name,gender,location,website,picture,relationship_status, email", format: "json" }}).then(function(result) {
+        alert(JSON.stringify(result.data));
+          $scope.correof = result.data.email;
+         $scope.nombref = result.data.name;
+         $scope.sexof = result.data.gender;
+         $scope.fotof = result.data.picture.data.url;
+        $scope.profileData = result.data;
+    }, function(error) {
+        alert("There was a problem getting your profile.  Check the logs for details.");
+        console.log(error);
+    });
+  }
 });

@@ -1,5 +1,26 @@
 <ion-view view-title="Ajustes">
   <ion-content>
     <h1>Ajustes</h1>
+    <center>
+    <button class="button button-assertive" ng-click="googleLogin()">
+      <i class="icon ion-social-googleplus"></i>
+      Google login
+    </button>
+
+    <button class="button button-positive" ng-click="facebookLogin()">
+      <i class="icon ion-social-facebook"></i>
+      Facebook Login
+    </button>
+    <p>{{cosqui}}</p>
+    <p ng-bind="nombre"></p>
+    <p ng-bind="email"></p>
+    <p ng-bind="sexo"></p>
+    <img ng-src="{{foto}}">
+
+    <img ng-src="{{fotof}}">
+    <p ng-bind="nombref"></p>
+    <p ng-bind="correof"></p>
+    <p ng-bind="sexof"></p>
+    </center>
   </ion-content>
 </ion-view>

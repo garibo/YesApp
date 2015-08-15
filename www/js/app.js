@@ -58,7 +58,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.factories', 
     url: "/ajustes",
     views: {
       'menuContent': {
-        templateUrl: "templates/ajustes.html"
+        templateUrl: "templates/ajustes.html",
+        controller: 'ajustesCtrl'
       }
     }
   });
