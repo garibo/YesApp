@@ -240,7 +240,14 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 
 })
 
-.controller('ajustesCtrl', function($scope, $cordovaOauth, $localstorage, $location, $http) {
+.controller('ajustesCtrl', function($state, $scope) {
+  $scope.ira = function()
+  {
+    $state.go('login');
+  }
+})
+
+.controller('loginCtrl', function($scope, $cordovaOauth, $localstorage, $location, $http) {
    $scope.nombre = $localstorage.get('nombre');
    $scope.email = $localstorage.get('email');
    $scope.sexo = $localstorage.get('sexo');
@@ -266,7 +273,6 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 
   $scope.getDataProfile = function(accessToken){
     var term=null;
-    //  alert("getting user data="+accessToken);
     $.ajax({
            url:'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token='+accessToken,
            type:'GET',
@@ -280,17 +286,6 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 
            console.log(JSON.stringify(data));
            alert(JSON.stringify(data));
-           // Save the userprofile data in your localStorage.
-           // window.localStorage.gmailLogin="true";
-           // window.localStorage.gmailID=data.id;
-           // window.localStorage.gmailEmail=data.email;
-           // window.localStorage.gmailFirstName=data.given_name;
-           // window.localStorage.gmailLastName=data.family_name;
-           // window.localStorage.gmailProfilePicture=data.picture;
-           // window.localStorage.gmailGender=data.gender;
-           // window.localStorage.gmailName=data.name;
-           // $scope.email = data.email;
-           // $scope.name = data.name;
 
            $scope.nombre = data.name;
            $scope.email = data.email;
@@ -303,7 +298,6 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
            $localstorage.set('foto', data.picture);
            }
         });
-        //$scope.disconnectUser(); //This call can be done later.
   };
 
   $scope.facebookLogin = function() {
