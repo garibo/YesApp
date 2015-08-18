@@ -1,9 +1,15 @@
 angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
-  
+/*Controller revisado*/
+.controller('AppCtrl', function($scope, $localstorage) {
+  $scope.$on('$ionicView.enter', function(){
+    $scope.nombre = $localstorage.get('nombre');
+    $scope.email = $localstorage.get('email');
+    $scope.imagen = $localstorage.get('imagen');
+  });
 })
 
+/*Controller revisado*/
 .controller('pedidosCtrl', function($scope, $ionicLoading, ListaPedidos) {
     $ionicLoading.show({
       content: 'Loading',
@@ -26,14 +32,15 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 
 })
 
+
 .controller('canastaCtrl', function($scope, $cordovaSQLite, $ionicPopup, $ionicModal, $cordovaGeolocation, Pedidos, $ionicLoading) {
 
   $scope.productos = [];
   $scope.total = 0;
 
   $scope.$on('$ionicView.leave', function(){
-  $scope.productos = [];
-  $scope.total = 0;
+    $scope.productos = [];
+    $scope.total = 0;
   });
 
   $scope.$on('$ionicView.enter', function(){
@@ -135,7 +142,7 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 
 .controller('productosCtrl', function($scope, Pizzas, Platillos, Bebidas, $ionicLoading, $ionicPopup, $filter, $cordovaSQLite, $state, Precios) {
   $scope.pizzas = Pizzas.query(function(){
-   $ionicLoading.hide();
+    $ionicLoading.hide();
     $scope.precios = Precios.query();
   },function(){
 
@@ -186,7 +193,7 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
    }
 
    $scope.agregarPizza = function(pizza) {
-  $scope.data = {}
+   $scope.data = {}
 
   // An elaborate, custom popup
   var myPopup = $ionicPopup.show({
@@ -240,29 +247,13 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 
 })
 
-.controller('ajustesCtrl', function($state, $scope) {
-  $scope.ira = function()
-  {
-    $state.go('login');
-  }
+.controller('ajustesCtrl', function($state, $scope, $localstorage) {
+  $localstorage.get('email') || $state.go('login');
 })
 
-.controller('loginCtrl', function($scope, $cordovaOauth, $localstorage, $location, $http) {
-   $scope.nombre = $localstorage.get('nombre');
-   $scope.email = $localstorage.get('email');
-   $scope.sexo = $localstorage.get('sexo');
-   $scope.foto = $localstorage.get('foto');
-
+.controller('loginCtrl', function($scope, $cordovaOauth, $localstorage, $location, $http, $state) {
    
-   $scope.correof = $localstorage.get('correof');
-   $scope.nombref = $localstorage.get('nombref');
-   $scope.sexof = $localstorage.get('sexof');
-   $scope.fotof = $localstorage.get('fotof');
-  
-  
-   
-  $scope.googleLogin = function()
-  {
+  $scope.googleLogin = function(){
     $cordovaOauth.google("956498525722-bd18h7c72rpqutl22d6oqug36j3cq4ue.apps.googleusercontent.com", ["https://www.googleapis.com/auth/urlshortener", "https://www.googleapis.com/auth/userinfo.email"]).then(function(result) {
         alert(JSON.stringify(result));
         $scope.getDataProfile(result.access_token);
@@ -272,32 +263,15 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
   }
 
   $scope.getDataProfile = function(accessToken){
-    var term=null;
-    $.ajax({
-           url:'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token='+accessToken,
-           type:'GET',
-           data:term,
-           dataType:'json',
-           error:function(jqXHR,text_status,strError){
-           },
-           success:function(data)
-           {
-           var item;
+    $http.get('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token='+accessToken)
+    .then(function(result) {
+        $localstorage.set('nombre', result.data.name);
+        $localstorage.set('email', result.data.email);
+        $localstorage.set('imagen', result.data.picture);
+        $state.go('app.pizzas');
+    }, function(error){
 
-           console.log(JSON.stringify(data));
-           alert(JSON.stringify(data));
-
-           $scope.nombre = data.name;
-           $scope.email = data.email;
-           $scope.sexo = data.gender;
-           $scope.foto = data.picture;
-
-           $localstorage.set('nombre', data.name);
-           $localstorage.set('email', data.email);
-           $localstorage.set('sexo', data.gender);
-           $localstorage.set('foto', data.picture);
-           }
-        });
+    });
   };
 
   $scope.facebookLogin = function() {
@@ -312,18 +286,13 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
   };
 
 
-  $scope.jalala = function(accessToken)
-  {
+  $scope.jalala = function(accessToken) {
     $http.get("https://graph.facebook.com/v2.2/me", { params: { access_token: accessToken, fields: "id,name,gender,location,website,picture,relationship_status, email", format: "json" }}).then(function(result) {
         alert(JSON.stringify(result.data));
-           $scope.correof = result.data.email;
-           $scope.nombref = result.data.name;
-           $scope.sexof = result.data.gender;
-           $scope.fotof = result.data.picture.data.url;
-          $localstorage.set('nombref', result.data.name);
-          $localstorage.set('correof', result.data.email);
-          $localstorage.set('sexof', result.data.gender);
-          $localstorage.set('fotof', result.data.picture.data.url);
+          $localstorage.set('nombre', result.data.name);
+          $localstorage.set('email', result.data.email);
+          $localstorage.set('imagen', result.data.picture.data.url);
+          $state.go('app.pizzas');
     }, function(error) {
         alert("There was a problem getting your profile.  Check the logs for details.");
         console.log(error);
