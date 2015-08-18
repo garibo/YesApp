@@ -36,35 +36,62 @@ angular.module('starter.factories', ['ngResource'])
     return {
         nuevoPedido: function(productosE, latitudE, longitudE) {
             return $http({
-					method: "POST",
-					url: "http://pizzeriayes.com/administrador/app/pedidos/php/dist/api/",
-					data: {
-						"id_cliente" : 1,
-						"id_direccion" : 1,
-						"id_telefono" : 1,
-						"latitud" : latitudE,
-						"longitud" : longitudE,
-						"productos" : productosE
+			method: "POST",
+			url: "http://pizzeriayes.com/administrador/app/pedidos/php/dist/api/",
+			data: {
+				"id_cliente" : 1,
+				"id_direccion" : 1,
+				"id_telefono" : 1,
+				"latitud" : latitudE,
+				"longitud" : longitudE,
+				"productos" : productosE
 
-					},
-					headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-					})
-					.then(function(response) {
-		                if (typeof response.data === 'object') {
-		                    return response.data;
-		                } else {
-		                    // invalid response
-		                    return $q.reject(response.data);
-		                }
+			},
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+			})
+			.then(function(response) {
+                if (typeof response.data === 'object') {
+                    return response.data;
+                } else {
+                    // invalid response
+                    return $q.reject(response.data);
+                }
 
-		            }, function(response) {
-		                // something went wrong
-		                return $q.reject(response.data);
-		            });
+            }, function(response) {
+                // something went wrong
+                return $q.reject(response.data);
+            });
         }
     };
 })
 
+
+.factory('Usuarios', function ($http, $q) {
+    return {
+	    nuevoUsuario: function(nombre, correo) {
+	        return $http({
+			method: "POST",
+			url: "http://pizzeriayes.com/administrador/app/clientes/php/api/",
+			data: {
+				"nombre" : nombre,
+				"correo" : correo
+			}
+			})
+			.then(function(response) {
+                if (typeof response.data === 'object') {
+                    return response.data;
+                } else {
+                    // invalid response
+                    return $q.reject(response.data);
+                }
+
+            }, function(response) {
+                // something went wrong
+                return $q.reject(response.data);
+            });
+        }
+    };
+})
 
 .factory('ListaPedidos', function($http){
 return {

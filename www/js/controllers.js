@@ -248,10 +248,18 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 })
 
 .controller('ajustesCtrl', function($state, $scope, $localstorage) {
-  $localstorage.get('email') || $state.go('login');
+  $scope.iniciar = function()
+  {
+    $localstorage.get('email') || $state.go('login');    
+  }
+
+  $scope.salir = function()
+  {
+    $localstorage.set('email', undefined);
+  }
 })
 
-.controller('loginCtrl', function($scope, $cordovaOauth, $localstorage, $location, $http, $state) {
+.controller('loginCtrl', function($scope, $cordovaOauth, $localstorage, $location, $http, $state, Usuarios) {
    
   $scope.googleLogin = function(){
     $cordovaOauth.google("956498525722-bd18h7c72rpqutl22d6oqug36j3cq4ue.apps.googleusercontent.com", ["https://www.googleapis.com/auth/urlshortener", "https://www.googleapis.com/auth/userinfo.email"]).then(function(result) {
