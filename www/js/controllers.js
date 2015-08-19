@@ -10,7 +10,7 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 })
 
 /*Controller revisado*/
-.controller('pedidosCtrl', function($scope, $ionicLoading, ListaPedidos) {
+.controller('pedidosCtrl', function($scope, $ionicLoading, ListaPedidos, $localstorage) {
     $ionicLoading.show({
       content: 'Loading',
       animation: 'fade-in',
@@ -19,7 +19,7 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
       showDelay: 0
     });
 
-    ListaPedidos.datos(1, function(data) {
+    ListaPedidos.datos($localstorage.get('id'), function(data) {
       $scope.pedidos = data;
       $ionicLoading.hide();
     });
@@ -33,7 +33,7 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 })
 
 
-.controller('canastaCtrl', function($scope, $cordovaSQLite, $ionicPopup, $ionicModal, $cordovaGeolocation, Pedidos, $ionicLoading) {
+.controller('canastaCtrl', function($scope, $cordovaSQLite, $ionicPopup, $ionicModal, $cordovaGeolocation, Pedidos, $ionicLoading, $localstorage) {
 
   $scope.productos = [];
   $scope.total = 0;
@@ -123,7 +123,7 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
       .getCurrentPosition(posOptions)
       .then(function (position) {
 
-        Pedidos.nuevoPedido($scope.productos, position.coords.latitude, position.coords.longitude)
+        Pedidos.nuevoPedido($localstorage.get('id'), $scope.productos, position.coords.latitude, position.coords.longitude)
         .then(function(data) {
         if (data.respuesta === 'bien') {
            $ionicLoading.hide();
@@ -314,7 +314,8 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
   {
     Usuarios.nuevoUsuario(nombre, correo)
         .then(function(data) {
-          alert(JSON.stringify(data));
+          alert(data.id);
+          $localstorage.set('id', data.id);
         }, function(error) {
         });
   }

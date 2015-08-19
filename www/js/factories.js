@@ -34,17 +34,17 @@ angular.module('starter.factories', ['ngResource'])
 
 .factory('Pedidos', function ($http, $q) {
     return {
-        nuevoPedido: function(productosE, latitudE, longitudE) {
+        nuevoPedido: function(idCliente, productos, latitud, longitud) {
             return $http({
 			method: "POST",
 			url: "http://pizzeriayes.com/administrador/app/pedidos/php/dist/api/",
 			data: {
-				"id_cliente" : 1,
+				"id_cliente" : idCliente,
 				"id_direccion" : 1,
 				"id_telefono" : 1,
-				"latitud" : latitudE,
-				"longitud" : longitudE,
-				"productos" : productosE
+				"latitud" : latitud,
+				"longitud" : longitud,
+				"productos" : productos
 
 			},
 			headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
