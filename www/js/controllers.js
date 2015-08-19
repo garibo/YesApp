@@ -255,7 +255,8 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 
   $scope.salir = function()
   {
-    $localstorage.set('email', undefined);
+    $localstorage.set('email', '');
+    $state.go('login');
   }
 })
 
@@ -276,6 +277,7 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
         $localstorage.set('nombre', result.data.name);
         $localstorage.set('email', result.data.email);
         $localstorage.set('imagen', result.data.picture);
+        jalarUsusario(result.data.name, result.data.email);
         $state.go('app.pizzas');
     }, function(error){
 
@@ -300,10 +302,20 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
           $localstorage.set('nombre', result.data.name);
           $localstorage.set('email', result.data.email);
           $localstorage.set('imagen', result.data.picture.data.url);
+          jalarUsusario(result.data.name, result.data.email);
           $state.go('app.pizzas');
     }, function(error) {
         alert("There was a problem getting your profile.  Check the logs for details.");
         console.log(error);
     });
+  }
+
+  function jalarUsusario(nombre, correo)
+  {
+    Usuarios.nuevoUsuario(nombre, correo)
+        .then(function(data) {
+          alert(JSON.stringify(data));
+        }, function(error) {
+        });
   }
 });
