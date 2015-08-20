@@ -123,9 +123,10 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
       .getCurrentPosition(posOptions)
       .then(function (position) {
 
-        Pedidos.nuevoPedido($localstorage.get('id'), $scope.productos, position.coords.latitude, position.coords.longitude)
+        Pedidos.nuevoPedido($localstorage.get('id'), $scope.productos, position.coords.latitude, position.coords.longitude, $scope.pedirData, $scope.pedirData.telefono)
         .then(function(data) {
         if (data.respuesta === 'bien') {
+          alert(JSON.stringify($scope.pedirData));
            $ionicLoading.hide();
          } else {
         }

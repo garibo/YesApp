@@ -34,14 +34,14 @@ angular.module('starter.factories', ['ngResource'])
 
 .factory('Pedidos', function ($http, $q) {
     return {
-        nuevoPedido: function(idCliente, productos, latitud, longitud) {
+        nuevoPedido: function(idCliente, productos, latitud, longitud, direccion, telefono) {
             return $http({
 			method: "POST",
 			url: "http://pizzeriayes.com/administrador/app/pedidos/php/dist/api/",
 			data: {
 				"id_cliente" : idCliente,
-				"id_direccion" : 1,
-				"id_telefono" : 1,
+				"direccion" : direccion,
+				"telefono" : telefono,
 				"latitud" : latitud,
 				"longitud" : longitud,
 				"productos" : productos
