@@ -1,8 +1,40 @@
 <ion-view view-title="Ajustes" ng-init="iniciar()">
   <ion-content>
-    <button class="button button-block button-assertive" ng-click="salir()">
-	  Salir
-	</button>
+ 
+	<div class="list card">
+	  <div class="item item-avatar">
+	    <img src="{{imagen}}">
+	    <h2 style="margin-top:9px;">{{nombre}}</h2>
+	  </div>
+
+	  <a href="#" class="item">
+	    Sexo: <p style="display:inline">Masculino</p>
+	  </a>
+
+	  <a href="#" class="item">
+	    Email: <p style="display:inline">{{email}}</p>
+	  </a>
+
+	  <a href="#" class="item">
+	    <button class="button button-block button-outline button-assertive" ng-click="googleLogin()">
+	      SALIR
+	    </button>
+	  </a>
+  </div>
+
+  <div style="padding:15px;">
+    <button class="button button-block button-assertive" ng-click="googleLogin()">
+      <i class="icon ion-social-googleplus"></i>
+      CONECTARSE CON GOOGLE
+    </button>
+
+    <button class="button button-block button-positive" ng-click="facebookLogin()">
+      <i class="icon ion-social-facebook"></i>
+      CONECTARSE CON FACEBOOK
+    </button>
+  </div>
+
+
 
   </ion-content>
 </ion-view>

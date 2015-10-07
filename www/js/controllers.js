@@ -6,6 +6,9 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
     $scope.nombre = $localstorage.get('nombre');
     $scope.email = $localstorage.get('email');
     $scope.imagen = $localstorage.get('imagen');
+    if (window.StatusBar) {
+        StatusBar.backgroundColorByHexString("#263238");
+    }
   });
 })
 
@@ -28,6 +31,16 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
     {
       moment.locale('es');
       return moment(dia).format('MMMM Do YYYY');
+    }
+
+    $scope.total = function(data)
+    {
+      var finalt = 0;
+      for (var i = 0; i < data.length; i++) {
+        finalt += data[i].precio != null ? parseFloat(data[i].precio)  : 0;
+        finalt += data[i].precio_pizza != null ? parseFloat(data[i].precio_pizza) : 0;
+      };      
+      return finalt;
     }
 
 })
@@ -249,9 +262,16 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 })
 
 .controller('ajustesCtrl', function($state, $scope, $localstorage) {
+
+  $scope.$on('$ionicView.enter', function(){
+    $scope.nombre = $localstorage.get('nombre');
+    $scope.email = $localstorage.get('email');
+    $scope.imagen = $localstorage.get('imagen');
+  }); 
+
   $scope.iniciar = function()
   {
-    $localstorage.get('email') || $state.go('login');    
+    $localstorage.get('email') || $state.go('login');  
   }
 
   $scope.salir = function()
@@ -279,6 +299,7 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
         $localstorage.set('email', result.data.email);
         $localstorage.set('imagen', result.data.picture);
         jalarUsusario(result.data.name, result.data.email);
+        alert(JSON.stringify(result.data));
         $state.go('app.pizzas');
     }, function(error){
 

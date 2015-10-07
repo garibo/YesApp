@@ -11,7 +11,7 @@
           {{producto.nombre}} {{((producto.precio_pizza == null) && producto.precio || !(producto.precio_pizza == null) && producto.precio_pizza) | currency}}
         </li>
       </ul>
-      <span><strong>Total:</strong> $202.00</span>
+      <span><strong>Total:</strong> {{total(pedido.productos) | currency}} </span>
     </div>
     </div>
 
