@@ -1,6 +1,11 @@
 <ion-view view-title="Pedidos">
   <ion-content>
 
+    <ion-refresher
+      pulling-text="Jala para actualizar..."
+      on-refresh="doRefresh()">
+    </ion-refresher>
+
     <div class="card" ng-repeat="pedido in pedidos">
     <div class="item item-divider">
       <p>{{fecha(pedido.fecha)}}</p>

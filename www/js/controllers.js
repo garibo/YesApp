@@ -43,6 +43,13 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
       return finalt;
     }
 
+    $scope.doRefresh = function() {
+      ListaPedidos.datos($localstorage.get('id'), function(data) {
+        $scope.pedidos = data;
+        $scope.$broadcast('scroll.refreshComplete');
+      });
+    };
+
 })
 
 
