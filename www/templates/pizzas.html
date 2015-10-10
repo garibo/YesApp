@@ -5,6 +5,11 @@
   <ion-tab title="Pizzas">
     <ion-nav-view name="pizzastab">
     <ion-content>
+
+    <ion-refresher
+      pulling-text="Arrastra para actualizar..."
+      on-refresh="doRefresh()">
+    </ion-refresher>
     
     <div class="list">
       <a class="item item-avatar" href="" ng-repeat="pizza in pizzas">
@@ -23,6 +28,11 @@
   <ion-tab title="Platillos" >
     <ion-nav-view name="otrostab">
     <ion-content>
+
+    <ion-refresher
+      pulling-text="Arrastra para actualizar..."
+      on-refresh="doRefresh()">
+    </ion-refresher>
       
       <div class="list">
       <a class="item item-avatar" href="" ng-repeat="platillo in platillos">
@@ -42,6 +52,11 @@
   <ion-tab title="Bebidas">
     <ion-nav-view name="bebidastab">
     <ion-content>
+
+    <ion-refresher
+      pulling-text="Arrastra para actualizar..."
+      on-refresh="doRefresh()">
+    </ion-refresher>
       
       <div class="list">
       <a class="item item-avatar" href="" ng-repeat="bebida in bebidas">

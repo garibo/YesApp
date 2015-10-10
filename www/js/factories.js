@@ -93,15 +93,27 @@ angular.module('starter.factories', ['ngResource'])
     };
 })
 
-.factory('ListaPedidos', function($http){
-return {
-  datos: function (id, callback){
-    $http({
-      method: 'GET',
-      url: 'http://pizzeriayes.com/administrador/app/pedidos/php/record/pedidos.php/'+id+''
-    }).success(callback);
-  }
-};
+.factory('ListaPedidos', function ($http, $q) {
+    return {
+      datos: function(id) {
+          return $http({
+        method: "GET",
+        url: 'http://pizzeriayes.com/administrador/app/pedidos/php/record/pedidos.php/'+id+''
+      })
+      .then(function(response) {
+                if (typeof response.data === 'object') {
+                    return response.data;
+                } else {
+                    // invalid response
+                    return $q.reject(response.data);
+                }
+
+            }, function(response) {
+                // something went wrong
+                return $q.reject(response.data);
+            });
+        }
+    };
 })
 
 .factory('$localstorage', ['$window', function($window) {

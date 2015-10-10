@@ -1,7 +1,7 @@
 angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 
 /*Controller revisado*/
-.controller('AppCtrl', function($scope, $localstorage) {
+.controller('AppCtrl', function($scope, $localstorage, $ionicPopup) {
   $scope.$on('$ionicView.enter', function(){
     $scope.nombre = $localstorage.get('nombre');
     $scope.email = $localstorage.get('email');
@@ -10,10 +10,19 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
         StatusBar.backgroundColorByHexString("#263238");
     }
   });
+
+  $scope.salir = function()
+  {
+    var confirmPopup = $ionicPopup.confirm({
+      title: '¿Deseas salir de la aplicación?',
+      cancelText: 'Cancelar',
+      okText: 'Si'
+    });
+  }
 })
 
 /*Controller revisado*/
-.controller('pedidosCtrl', function($scope, $ionicLoading, ListaPedidos, $localstorage) {
+.controller('pedidosCtrl', function($scope, $ionicLoading, ListaPedidos, $localstorage,$rootScope, $cordovaNetwork, $cordovaToast) {
     $ionicLoading.show({
       content: 'Loading',
       animation: 'fade-in',
@@ -22,10 +31,25 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
       showDelay: 0
     });
 
-    ListaPedidos.datos($localstorage.get('id'), function(data) {
-      $scope.pedidos = data;
+    if($cordovaNetwork.isOffline())
+    {
       $ionicLoading.hide();
-    });
+      $scope.pedidos = {};
+      $cordovaToast.show('Revisa tu conexion a internet', 'long', 'bottom');
+    }
+    else
+    {
+      ListaPedidos.datos($localstorage.get('id'))
+      .then(function(data) {
+        $scope.pedidos = data;
+          $ionicLoading.hide();
+      },
+      function(error) {
+        $cordovaToast.show('Error de servidor intentalo mas tarde', 'long', 'bottom');
+      });
+    
+    }
+
 
     $scope.fecha = function(dia)
     {
@@ -44,16 +68,28 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
     }
 
     $scope.doRefresh = function() {
-      ListaPedidos.datos($localstorage.get('id'), function(data) {
-        $scope.pedidos = data;
+      if($cordovaNetwork.isOffline())
+      {
         $scope.$broadcast('scroll.refreshComplete');
-      });
+        $cordovaToast.show('Revisa tu conexion a internet', 'long', 'bottom');
+      }
+      else
+      {
+        ListaPedidos.datos($localstorage.get('id'))
+        .then(function(data) {
+          $scope.pedidos = data;
+            $scope.$broadcast('scroll.refreshComplete');
+        },
+        function(error) {
+          $cordovaToast.show('Error de servidor intentalo mas tarde', 'long', 'bottom');
+        });     
+      }
     };
 
 })
 
 
-.controller('canastaCtrl', function($scope, $cordovaSQLite, $ionicPopup, $ionicModal, $cordovaGeolocation, Pedidos, $ionicLoading, $localstorage) {
+.controller('canastaCtrl', function($scope, $cordovaSQLite, $ionicPopup, $ionicModal, $cordovaGeolocation, Pedidos, $ionicLoading, $localstorage, $cordovaNetwork, $cordovaToast) {
 
   $scope.productos = [];
   $scope.total = 0;
@@ -74,7 +110,7 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
             $scope.total += res.rows.item(i).precio;
         };
     } else {
-        alert("No results found");
+
     }
     }, function (err) {
         alert(err);
@@ -143,41 +179,95 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
       .getCurrentPosition(posOptions)
       .then(function (position) {
 
-        Pedidos.nuevoPedido($localstorage.get('id'), $scope.productos, position.coords.latitude, position.coords.longitude, $scope.pedirData, $scope.pedirData.telefono)
-        .then(function(data) {
-        if (data.respuesta === 'bien') {
-          alert(JSON.stringify($scope.pedirData));
-           $ionicLoading.hide();
-         } else {
+        if($cordovaNetwork.isOffline())
+        {
+          $ionicLoading.hide();
+          $cordovaToast.show('Error revisa tu conexion a internet', 'long', 'bottom');
         }
-        }, function(error) {
-        });
+        else
+        {
+          Pedidos.nuevoPedido($localstorage.get('id'), $scope.productos, position.coords.latitude, position.coords.longitude, $scope.pedirData, $scope.pedirData.telefono)
+            .then(function(data) {
+            if (data.respuesta === 'bien') {
+              var conf = 'Y llegara a esta dirección: '+$scope.pedirData.calle+', #'+$scope.pedirData.numero+' '+$scope.pedirData.colonia+', \n En un momento recibira una confirmacion a este correo: '+$localstorage.get('email');
+               $ionicLoading.hide();
+               $scope.modal.hide();
+               $scope.pedirData = {};
+               $cordovaSQLite.execute($cordovaSQLite.openDB("yesApp.db"), "DELETE FROM canasta", []);
+               $scope.productos = {};
+               $scope.total = 0;
+               var alertPopup = $ionicPopup.alert({
+                 title: 'Tu pedido ha sido enviado',
+                 template: conf
+               });
+             } else {
+              $ionicLoading.hide();
+              $cordovaToast.show('Error de servidor intentalo mas tarde', 'long', 'bottom');
+            }
+            }, function(error) {
+              $ionicLoading.hide();
+              $cordovaToast.show('Error de servidor intentalo mas tarde', 'long', 'bottom');
+            });
+                
+        }
         
       }, function(err) {
-        alert("Valio verga");
+        $ionicLoading.hide();
+        $cordovaToast.show('Error al intentar obtener tu posicion, enciende el GPS', 'long', 'bottom');
       });
 
   };
        
 })
 
-.controller('productosCtrl', function($scope, Pizzas, Platillos, Bebidas, $ionicLoading, $ionicPopup, $filter, $cordovaSQLite, $state, Precios) {
-  $scope.pizzas = Pizzas.query(function(){
-    $ionicLoading.hide();
-    $scope.precios = Precios.query();
-  },function(){
+.controller('productosCtrl', function($scope, Pizzas, Platillos, Bebidas, $ionicLoading, $ionicPopup, $filter, $cordovaSQLite, $state, Precios, $cordovaNetwork, $cordovaToast) {
 
-  });
-  $scope.platillos = Platillos.query();
-  $scope.bebidas = Bebidas.query();
-
-   $ionicLoading.show({
+  $ionicLoading.show({
     content: 'Loading',
     animation: 'fade-in',
     showBackdrop: true,
     maxWidth: 200,
     showDelay: 0
   });
+
+  if($cordovaNetwork.isOffline())
+  {
+    $ionicLoading.hide();
+    $cordovaToast.show('Revisa tu conexion a internet', 'long', 'bottom');
+  }
+  else
+  {
+    $scope.pizzas = Pizzas.query(function(){
+        $ionicLoading.hide();
+        $scope.precios = Precios.query();
+      },function(){
+        $ionicLoading.hide();
+        $cordovaToast.show('Error de servidor intentalo mas tarde', 'long', 'bottom');
+      });
+      $scope.platillos = Platillos.query();
+      $scope.bebidas = Bebidas.query();
+  }
+
+ $scope.doRefresh = function() {
+    if($cordovaNetwork.isOffline())
+    {
+      $scope.$broadcast('scroll.refreshComplete');
+      $cordovaToast.show('Error revisa tu conexion a internet', 'long', 'bottom');
+    }
+    else
+    {
+      $scope.pizzas = Pizzas.query(function(){
+          $ionicLoading.hide();
+          $scope.precios = Precios.query();
+          $scope.$broadcast('scroll.refreshComplete');
+        },function(){
+          $ionicLoading.hide();
+          $cordovaToast.show('Error de servidor intentalo mas tarde', 'long', 'bottom');
+        });
+        $scope.platillos = Platillos.query();
+        $scope.bebidas = Bebidas.query();    
+      }
+  };
 
    $scope.agregarPlatillo = function(platillo)
    {
