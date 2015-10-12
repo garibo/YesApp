@@ -1,7 +1,7 @@
 angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 
 /*Controller revisado*/
-.controller('AppCtrl', function($scope, $localstorage, $ionicPopup) {
+.controller('AppCtrl', function($scope, $localstorage, $ionicPopup, $state) {
   $scope.$on('$ionicView.enter', function(){
     $scope.nombre = $localstorage.get('nombre');
     $scope.email = $localstorage.get('email');
@@ -11,18 +11,24 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
     }
   });
 
-  $scope.salir = function()
+   $scope.salir = function()
   {
     var confirmPopup = $ionicPopup.confirm({
       title: '¿Deseas salir de la aplicación?',
       cancelText: 'Cancelar',
       okText: 'Si'
     });
-  }
+    confirmPopup.then(function(res) {
+     if(res) {
+       $localstorage.set('email', '');
+        $state.go('login');
+     }
+   });
+  };
 })
 
 /*Controller revisado*/
-.controller('pedidosCtrl', function($scope, $ionicLoading, ListaPedidos, $localstorage,$rootScope, $cordovaNetwork, $cordovaToast) {
+.controller('pedidosCtrl', function($scope, $ionicLoading, ListaPedidos, $localstorage, $cordovaNetwork, $cordovaToast) {
     $ionicLoading.show({
       content: 'Loading',
       animation: 'fade-in',
@@ -358,7 +364,7 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 
 })
 
-.controller('ajustesCtrl', function($state, $scope, $localstorage) {
+.controller('ajustesCtrl', function($scope, $localstorage, $cordovaOauth, $cordovaNetwork, $cordovaToast, $http, $state, Usuarios, $ionicPopup) {
 
   $scope.$on('$ionicView.enter', function(){
     $scope.nombre = $localstorage.get('nombre');
@@ -371,22 +377,36 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
     $localstorage.get('email') || $state.go('login');  
   }
 
+
   $scope.salir = function()
   {
-    $localstorage.set('email', '');
-    $state.go('login');
-  }
-})
-
-.controller('loginCtrl', function($scope, $cordovaOauth, $localstorage, $location, $http, $state, Usuarios) {
-   
-  $scope.googleLogin = function(){
-    $cordovaOauth.google("956498525722-bd18h7c72rpqutl22d6oqug36j3cq4ue.apps.googleusercontent.com", ["https://www.googleapis.com/auth/urlshortener", "https://www.googleapis.com/auth/userinfo.email"]).then(function(result) {
-        alert(JSON.stringify(result));
-        $scope.getDataProfile(result.access_token);
-    }, function(error) {
-        alert("8==D"+error);
+    var confirmPopup = $ionicPopup.confirm({
+      title: '¿Deseas salir de la aplicación?',
+      cancelText: 'Cancelar',
+      okText: 'Si'
     });
+    confirmPopup.then(function(res) {
+     if(res) {
+       $localstorage.set('email', '');
+        $state.go('login');
+     }
+   });
+  };
+
+   $scope.googleLogin = function(){
+    if($cordovaNetwork.isOffline())
+    {
+      $cordovaToast.show('Revisa tu conexion a internet', 'long', 'bottom');
+    }
+    else
+    {
+      $cordovaOauth.google("956498525722-bd18h7c72rpqutl22d6oqug36j3cq4ue.apps.googleusercontent.com", ["https://www.googleapis.com/auth/urlshortener", "https://www.googleapis.com/auth/userinfo.email"]).then(function(result) {
+          alert(JSON.stringify(result));
+          $scope.getDataProfile(result.access_token);
+      }, function(error) {
+          $cordovaToast.show('Imposible conectar, intentalo mas tarde', 'long', 'bottom');
+      });
+    }
   }
 
   $scope.getDataProfile = function(accessToken){
@@ -404,14 +424,94 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
   };
 
   $scope.facebookLogin = function() {
-    $cordovaOauth.facebook("709455109197894", ["email", "public_profile", "user_friends"]).then(function(result) {
+    if($cordovaNetwork.isOffline())
+    {
+      $cordovaToast.show('Revisa tu conexion a internet', 'long', 'bottom');
+    }
+    else
+    {
+      $cordovaOauth.facebook("709455109197894", ["email", "public_profile", "user_friends"]).then(function(result) {
           $scope.accessToken = result.access_token;
           $scope.jalala($scope.accessToken);
       }, function(error) {
-          alert("There was a problem signing in!  See the console for logs");
-          alert(JSON.stringify(error));
+          $cordovaToast.show('Imposible conectar, intentalo mas tarde', 'long', 'bottom');
       });
+    }
+  };
 
+
+  $scope.jalala = function(accessToken) {
+    $http.get("https://graph.facebook.com/v2.2/me", { params: { access_token: accessToken, fields: "id,name,gender,location,website,picture,relationship_status, email", format: "json" }}).then(function(result) {
+        alert(JSON.stringify(result.data));
+          $localstorage.set('nombre', result.data.name);
+          $localstorage.set('email', result.data.email);
+          $localstorage.set('imagen', result.data.picture.data.url);
+          jalarUsusario(result.data.name, result.data.email);
+          $state.go('app.pizzas');
+    }, function(error) {
+        alert("There was a problem getting your profile.  Check the logs for details.");
+        console.log(error);
+    });
+  }
+
+  function jalarUsusario(nombre, correo)
+  {
+    Usuarios.nuevoUsuario(nombre, correo)
+        .then(function(data) {
+          alert(data.id);
+          $localstorage.set('id', data.id);
+        }, function(error) {
+        });
+  }
+
+})
+
+.controller('loginCtrl', function($scope, $cordovaOauth, $localstorage, $location, $http, $state, Usuarios, $cordovaNetwork, $cordovaToast) {
+   
+  $scope.googleLogin = function(){
+    if($cordovaNetwork.isOffline())
+    {
+      $cordovaToast.show('Revisa tu conexion a internet', 'long', 'bottom');
+    }
+    else
+    {
+      $cordovaOauth.google("956498525722-bd18h7c72rpqutl22d6oqug36j3cq4ue.apps.googleusercontent.com", ["https://www.googleapis.com/auth/urlshortener", "https://www.googleapis.com/auth/userinfo.email"]).then(function(result) {
+          alert(JSON.stringify(result));
+          $scope.getDataProfile(result.access_token);
+      }, function(error) {
+          $cordovaToast.show('Imposible conectar, intentalo mas tarde', 'long', 'bottom');
+      });
+    }
+  }
+
+  $scope.getDataProfile = function(accessToken){
+    $http.get('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token='+accessToken)
+    .then(function(result) {
+        $localstorage.set('nombre', result.data.name);
+        $localstorage.set('email', result.data.email);
+        $localstorage.set('imagen', result.data.picture);
+        jalarUsusario(result.data.name, result.data.email);
+        alert(JSON.stringify(result.data));
+        $state.go('app.pizzas');
+    }, function(error){
+
+    });
+  };
+
+  $scope.facebookLogin = function() {
+    if($cordovaNetwork.isOffline())
+    {
+      $cordovaToast.show('Revisa tu conexion a internet', 'long', 'bottom');
+    }
+    else
+    {
+      $cordovaOauth.facebook("709455109197894", ["email", "public_profile", "user_friends"]).then(function(result) {
+          $scope.accessToken = result.access_token;
+          $scope.jalala($scope.accessToken);
+      }, function(error) {
+          $cordovaToast.show('Imposible conectar, intentalo mas tarde', 'long', 'bottom');
+      });
+    }
   };
 
 
