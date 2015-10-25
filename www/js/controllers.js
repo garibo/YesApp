@@ -3,6 +3,7 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 /*Controller revisado*/
 .controller('AppCtrl', function($scope, $localstorage, $ionicPopup, $state) {
   $scope.$on('$ionicView.enter', function(){
+    $localstorage.get('email') || $state.go('login'); 
     $scope.nombre = $localstorage.get('nombre');
     $scope.email = $localstorage.get('email');
     $scope.imagen = $localstorage.get('imagen');
@@ -28,7 +29,11 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 })
 
 /*Controller revisado*/
-.controller('pedidosCtrl', function($scope, $ionicLoading, ListaPedidos, $localstorage, $cordovaNetwork, $cordovaToast) {
+.controller('pedidosCtrl', function($scope, $ionicLoading, ListaPedidos, $localstorage, $cordovaNetwork, $cordovaToast, $state) {
+  $scope.$on('$ionicView.enter', function(){
+    $localstorage.get('email') || $state.go('login'); 
+  });
+
     $ionicLoading.show({
       content: 'Loading',
       animation: 'fade-in',
@@ -51,6 +56,7 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
           $ionicLoading.hide();
       },
       function(error) {
+        $ionicLoading.hide();
         $cordovaToast.show('Error de servidor intentalo mas tarde', 'long', 'bottom');
       });
     
@@ -95,8 +101,11 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 })
 
 
-.controller('canastaCtrl', function($scope, $cordovaSQLite, $ionicPopup, $ionicModal, $cordovaGeolocation, Pedidos, $ionicLoading, $localstorage, $cordovaNetwork, $cordovaToast) {
-
+.controller('canastaCtrl', function($scope, $state, $cordovaSQLite, $ionicPopup, $ionicModal, $cordovaGeolocation, Pedidos, $ionicLoading, $localstorage, $cordovaNetwork, $cordovaToast) {
+  
+  $scope.$on('$ionicView.enter', function(){
+    $localstorage.get('email') || $state.go('login'); 
+  });
   $scope.productos = [];
   $scope.total = 0;
 
@@ -226,7 +235,11 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
        
 })
 
-.controller('productosCtrl', function($scope, Pizzas, Platillos, Bebidas, $ionicLoading, $ionicPopup, $filter, $cordovaSQLite, $state, Precios, $cordovaNetwork, $cordovaToast) {
+.controller('productosCtrl', function($scope, Pizzas, $localstorage, $state, Platillos, Bebidas, $ionicLoading, $ionicPopup, $filter, $cordovaSQLite, $state, Precios, $cordovaNetwork, $cordovaToast) {
+ 
+  $scope.$on('$ionicView.enter', function(){
+    $localstorage.get('email') || $state.go('login'); 
+  });
 
   $ionicLoading.show({
     content: 'Loading',
@@ -367,15 +380,11 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 .controller('ajustesCtrl', function($scope, $localstorage, $cordovaOauth, $cordovaNetwork, $cordovaToast, $http, $state, Usuarios, $ionicPopup) {
 
   $scope.$on('$ionicView.enter', function(){
+    $localstorage.get('email') || $state.go('login');  
     $scope.nombre = $localstorage.get('nombre');
     $scope.email = $localstorage.get('email');
     $scope.imagen = $localstorage.get('imagen');
   }); 
-
-  $scope.iniciar = function()
-  {
-    $localstorage.get('email') || $state.go('login');  
-  }
 
 
   $scope.salir = function()

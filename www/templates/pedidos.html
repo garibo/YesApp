@@ -6,7 +6,7 @@
       on-refresh="doRefresh()">
     </ion-refresher>
 
-    <div class="card" ng-repeat="pedido in pedidos">
+    <div class="card" ng-repeat="pedido in pedidos" ng-show="pedidos.length">
     <div class="item item-divider">
       <p>{{fecha(pedido.fecha)}}</p>
     </div>
@@ -18,6 +18,13 @@
       </ul>
       <span><strong>Total:</strong> {{total(pedido.productos) | currency}} </span>
     </div>
+    </div>
+
+    <div ng-hide="pedidos.length" id="nohay">
+      <center>
+      <i class="icon ion-android-send nohay"></i>
+      <p class="teisto">Sin historial de pedidos</p>
+      </center>
     </div>
 
   </ion-content>
