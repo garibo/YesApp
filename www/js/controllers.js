@@ -218,9 +218,9 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 
 .controller('productosCtrl', function($scope, $localstorage, $state, $ionicLoading, $ionicPopup, $filter, $cordovaSQLite, Precios, $cordovaNetwork, $cordovaToast, Pizzas, Platillos, Bebidas) {
 
-  $scope.citems = 0;
   $scope.$on('$ionicView.enter', function(){
     $localstorage.get('email') || $state.go('login'); 
+    $scope.citems = 0;
     var db = $cordovaSQLite.openDB("yesApp.db");
     var query = "SELECT * FROM canasta";
     $cordovaSQLite.execute(db, query, [])
