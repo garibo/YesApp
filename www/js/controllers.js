@@ -26,7 +26,7 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
   };
 })
 
-.controller('pedidosCtrl', function($scope, $ionicLoading, ListaPedidos, $localstorage, $cordovaNetwork, $cordovaToast, $state) {
+.controller('pedidosCtrl', function($scope, $ionicLoading, $localstorage, $cordovaNetwork, $cordovaToast, $state, ListaPedidos) {
 
   $scope.$on('$ionicView.enter', function(){
    $localstorage.get('email') || $state.go('login'); 
@@ -92,7 +92,7 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 })
 
 
-.controller('canastaCtrl', function($scope, $state, $cordovaSQLite, $ionicPopup, $ionicModal, $cordovaGeolocation, Pedidos, $ionicLoading, $localstorage, $cordovaNetwork, $cordovaToast) {
+.controller('canastaCtrl', function($scope, $state, $cordovaSQLite, $ionicPopup, $ionicModal, $cordovaGeolocation, $ionicLoading, $localstorage, $cordovaNetwork, $cordovaToast, Pedidos) {
 
   $scope.productos = [];
   $scope.total = 0;
@@ -216,7 +216,7 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 
 })
 
-.controller('productosCtrl', function($scope, Pizzas, $localstorage, $state, Platillos, Bebidas, $ionicLoading, $ionicPopup, $filter, $cordovaSQLite, Precios, $cordovaNetwork, $cordovaToast) {
+.controller('productosCtrl', function($scope, $localstorage, $state, $ionicLoading, $ionicPopup, $filter, $cordovaSQLite, Precios, $cordovaNetwork, $cordovaToast, Pizzas, Platillos, Bebidas) {
 
   $scope.citems = 0;
   $scope.$on('$ionicView.enter', function(){
@@ -368,7 +368,7 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 
 })
 
-.controller('ajustesCtrl', function($scope, $localstorage, $cordovaOauth, $cordovaNetwork, $cordovaToast, $http, $state, Usuarios, $ionicPopup) {
+.controller('ajustesCtrl', function($scope, $localstorage, $cordovaOauth, $cordovaNetwork, $cordovaToast, $http, $state, $ionicPopup, Usuarios) {
 
   $scope.$on('$ionicView.enter', function(){
     $localstorage.get('email') || $state.go('login');  
@@ -466,7 +466,7 @@ angular.module('starter.controllers', ['ngCordova', 'ui.router'])
 
 })
 
-.controller('loginCtrl', function($scope, $cordovaOauth, $localstorage, $location, $http, $state, Usuarios, $cordovaNetwork, $cordovaToast) {
+.controller('loginCtrl', function($scope, $cordovaOauth, $localstorage, $location, $http, $state, $cordovaNetwork, $cordovaToast, Usuarios) {
    
   $scope.googleLogin = function(){
     if($cordovaNetwork.isOffline()){
