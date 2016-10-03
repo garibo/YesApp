@@ -20,4 +20,4 @@ Screen             |  Shots
 ![](screenshots/captura13.png)  |  ![](screenshots/captura14.png)
 ![](screenshots/captura15.png)  |  ![](screenshots/captura16.png)
 ![](screenshots/captura17.png)  |  ![](screenshots/captura18.png)
-![](screenshots/captura19.png)  |  
+![](screenshots/captura19.png)  |  ![](screenshots/captura20.png)
